@@ -1,0 +1,7 @@
+# Appium Test Artifacts
+test/screenshots/
+test/reports/
+*.png
+allure-results/
+allure-report/
+wdio-*.log

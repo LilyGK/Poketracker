@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "PokeTracker",
+    "slug": "poketracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.poketracker.app"
+    },
+    "android": {
+      "package": "com.poketracker.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#2196F3"
+      }
+    }
+  }
+}
