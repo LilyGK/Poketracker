@@ -22,3 +22,6 @@ allure-report/
 
 # Test Screenshots (local only, uploaded in CI as artifacts)
 screenshots/
+
+# Test Videos (local only, uploaded in CI as artifacts)
+videos/

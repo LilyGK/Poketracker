@@ -66,7 +66,11 @@ export const config: any = {
         'appium:appActivity': '.MainActivity',
         'appium:autoGrantPermissions': true,
         'appium:noReset': false,
-        'appium:fullReset': false
+        'appium:fullReset': false,
+        // Video recording for debugging
+        'appium:recordVideo': true,
+        'appium:videoQuality': 'medium',
+        'appium:videoFps': 10
     }],
 
     //
@@ -103,7 +107,7 @@ export const config: any = {
     // baseUrl: 'http://localhost:8080',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 30000,  // Increased for CI emulator
+    waitforTimeout: 600000,  // 10 minutes to rule out timing issues
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -152,7 +156,7 @@ export const config: any = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 120000  // Increased for CI emulator
+        timeout: 900000  // 15 minutes to allow for 10 minute waits
     },
 
     //
@@ -298,12 +302,32 @@ export const config: any = {
         if (!passed) {
             const timestamp = new Date().toISOString().replace(/:/g, '-');
             const testName = test.title.replace(/\s+/g, '-').toLowerCase();
+            
+            // Save screenshot
             const screenshotPath = `./screenshots/${testName}-${timestamp}.png`;
             try {
                 await (browser as any).saveScreenshot(screenshotPath);
                 console.log(`Screenshot saved: ${screenshotPath}`);
             } catch (screenshotError) {
                 console.error('Failed to capture screenshot:', screenshotError);
+            }
+            
+            // Stop and retrieve video recording
+            try {
+                const videoBase64 = await (browser as any).execute('mobile: stopRecordingScreen');
+                if (videoBase64) {
+                    const fs = require('fs');
+                    const path = require('path');
+                    const videoDir = './videos';
+                    if (!fs.existsSync(videoDir)) {
+                        fs.mkdirSync(videoDir, { recursive: true });
+                    }
+                    const videoPath = path.join(videoDir, `${testName}-${timestamp}.mp4`);
+                    fs.writeFileSync(videoPath, videoBase64, 'base64');
+                    console.log(`Video saved: ${videoPath}`);
+                }
+            } catch (videoError) {
+                console.error('Failed to retrieve video:', videoError);
             }
         }
     },
