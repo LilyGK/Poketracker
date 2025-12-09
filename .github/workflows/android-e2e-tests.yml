@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     
+    env:
+      APPIUM_LOG_LEVEL: debug
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,6 +30,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install Appium and drivers
+        run: |
+          npm install -g appium@3.1.2
+          appium driver install uiautomator2
 
       - name: Enable KVM for Android Emulator
         run: |
@@ -72,7 +80,12 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
+            echo "Waiting for emulator to be ready..."
+            adb wait-for-device
+            adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+            echo "Emulator is ready"
             adb devices
+            echo "Running tests..."
             npm run test:e2e
 
       - name: Generate Allure Report
