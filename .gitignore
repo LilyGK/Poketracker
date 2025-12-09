@@ -19,3 +19,6 @@ web-build/
 # Allure Reports
 allure-results/
 allure-report/
+
+# Test Screenshots (local only, uploaded in CI as artifacts)
+screenshots/

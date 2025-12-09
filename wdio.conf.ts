@@ -1,4 +1,7 @@
-export const config: WebdriverIO.Config = {
+// Global declarations for WebdriverIO
+declare const browser: WebdriverIO.Browser;
+
+export const config: any = {
     //
     // ====================
     // Runner Configuration
@@ -100,7 +103,7 @@ export const config: WebdriverIO.Config = {
     // baseUrl: 'http://localhost:8080',
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: 30000,  // Increased for CI emulator
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -149,7 +152,7 @@ export const config: WebdriverIO.Config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 60000
+        timeout: 120000  // Increased for CI emulator
     },
 
     //
@@ -254,8 +257,9 @@ export const config: WebdriverIO.Config = {
      * Hook that gets executed after the suite has ended
      * @param {object} suite suite details
      */
-    // afterSuite: function (suite) {
-    // },
+    afterSuite: async function (suite: any) {
+        // Additional cleanup if needed
+    },
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name
@@ -272,8 +276,37 @@ export const config: WebdriverIO.Config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // after: function (result, capabilities, specs) {
-    // },
+    after: async function (result: number, capabilities: any, specs: any) {
+        // Take screenshot on test failure
+        if (result !== 0) {
+            const timestamp = new Date().toISOString().replace(/:/g, '-');
+            const screenshotPath = `./screenshots/failure-${timestamp}.png`;
+            try {
+                await (browser as any).saveScreenshot(screenshotPath);
+                console.log(`Screenshot saved: ${screenshotPath}`);
+            } catch (error) {
+                console.error('Failed to capture screenshot:', error);
+            }
+        }
+    },
+    /**
+     * Function to be executed after a test (in Mocha/Jasmine) or a step (in Cucumber) fails.
+     * @param {object} test test details
+     * @param {object} error error details
+     */
+    afterTest: async function(test: any, context: any, { error, result, duration, passed, retries }: any) {
+        if (!passed) {
+            const timestamp = new Date().toISOString().replace(/:/g, '-');
+            const testName = test.title.replace(/\s+/g, '-').toLowerCase();
+            const screenshotPath = `./screenshots/${testName}-${timestamp}.png`;
+            try {
+                await (browser as any).saveScreenshot(screenshotPath);
+                console.log(`Screenshot saved: ${screenshotPath}`);
+            } catch (screenshotError) {
+                console.error('Failed to capture screenshot:', screenshotError);
+            }
+        }
+    },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {object} config wdio configuration object
