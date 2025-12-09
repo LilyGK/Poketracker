@@ -31,11 +31,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Appium and drivers
+      - name: Verify Appium installation
         run: |
-          npm install -g appium@next
-          appium driver install uiautomator2
-          appium -v
+          npx appium -v
+          npx appium driver list --installed
 
       - name: Enable KVM for Android Emulator
         run: |
