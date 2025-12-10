@@ -1,21 +1,37 @@
 import { config as baseConfig } from './wdio.conf';
 import * as dotenv from 'dotenv';
 
-// Load environment variables from .env file
+// Load environment variables from .env file (only works locally, not in CI)
 dotenv.config();
 
 // Global declarations for WebdriverIO
 declare const browser: WebdriverIO.Browser;
 
 // Get environment variables with type safety
-const env = process.env as any;
+const BROWSERSTACK_USERNAME = process.env.BROWSERSTACK_USERNAME;
+const BROWSERSTACK_ACCESS_KEY = process.env.BROWSERSTACK_ACCESS_KEY;
+const BROWSERSTACK_APP_URL = process.env.BROWSERSTACK_APP_URL;
+
+// Validate credentials are available
+if (!BROWSERSTACK_USERNAME || !BROWSERSTACK_ACCESS_KEY) {
+    throw new Error('BrowserStack credentials not found. Set BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY environment variables.');
+}
+
+if (!BROWSERSTACK_APP_URL) {
+    console.warn('⚠️  BROWSERSTACK_APP_URL not set. Tests will fail without an uploaded app.');
+}
+
+console.log('BrowserStack config loaded:');
+console.log('  Username:', BROWSERSTACK_USERNAME ? '✓ Set' : '✗ Missing');
+console.log('  Access Key:', BROWSERSTACK_ACCESS_KEY ? '✓ Set' : '✗ Missing');
+console.log('  App URL:', BROWSERSTACK_APP_URL || '✗ Missing');
 
 export const config: any = {
     ...baseConfig,
     
     // BrowserStack specific settings
-    user: env.BROWSERSTACK_USERNAME,
-    key: env.BROWSERSTACK_ACCESS_KEY,
+    user: BROWSERSTACK_USERNAME,
+    key: BROWSERSTACK_ACCESS_KEY,
     
     // Override hostname and port for BrowserStack
     hostname: 'hub-cloud.browserstack.com',
@@ -27,8 +43,8 @@ export const config: any = {
     capabilities: [{
         // BrowserStack specific capabilities
         'bstack:options': {
-            userName: env.BROWSERSTACK_USERNAME,
-            accessKey: env.BROWSERSTACK_ACCESS_KEY,
+            userName: BROWSERSTACK_USERNAME,
+            accessKey: BROWSERSTACK_ACCESS_KEY,
             projectName: 'PokeTracker',
             buildName: `Build ${new Date().toISOString()}`,
             sessionName: 'E2E Tests',
@@ -43,7 +59,7 @@ export const config: any = {
         'appium:platformVersion': '13.0',
         'appium:deviceName': 'Google Pixel 7',
         'appium:automationName': 'UiAutomator2',
-        'appium:app': env.BROWSERSTACK_APP_URL || 'bs://your-app-id',
+        'appium:app': BROWSERSTACK_APP_URL || 'bs://your-app-id',
         'appium:autoGrantPermissions': true,
         'appium:noReset': false,
         'appium:fullReset': false,
@@ -66,7 +82,7 @@ export const config: any = {
     // BrowserStack specific hooks
     beforeSession: function (config: any, capabilities: any, specs: any) {
         console.log('Starting BrowserStack session...');
-        console.log('App URL:', env.BROWSERSTACK_APP_URL);
+        console.log('App URL:', BROWSERSTACK_APP_URL);
     },
     
     // Override beforeTest to skip video recording (BrowserStack handles it automatically)
