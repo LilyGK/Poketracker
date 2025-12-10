@@ -2,9 +2,6 @@ import { expect, browser } from '@wdio/globals';
 
 describe('PokeTracker - App Launch', () => {
     it('should launch the app successfully', async () => {
-        // Wait for app to initialize
-        await (browser as any).pause(5000);;
-        
         // Verify app context
         const context = await (browser as any).getContext();
         expect(context).toContain('NATIVE');

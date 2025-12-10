@@ -102,6 +102,8 @@ export function HabitCard({
             </View>
           ) : (
             <TouchableOpacity
+              testID={`complete-habit-btn-${habit.id}`}
+              accessibilityLabel={`complete-habit-btn-${habit.id}`}
               onPress={onComplete}
               activeOpacity={0.8}
               style={styles.pokeballButtonContainer}

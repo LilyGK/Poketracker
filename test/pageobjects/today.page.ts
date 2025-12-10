@@ -1,5 +1,6 @@
 import { $ } from '@wdio/globals';
 import BasePage from './base.page';
+import { TodayLocators } from '../locators/today.locators';
 
 /**
  * Page object for the Today/Home screen
@@ -9,7 +10,7 @@ class TodayPage extends BasePage {
      * Define selectors - using testID from TodayScreen.tsx
      */
     get habitsList() {
-        return $('~habit-list');  // testID="habit-list"
+        return $(TodayLocators.habitsList);
     }
 
     /**
@@ -23,7 +24,21 @@ class TodayPage extends BasePage {
      * Get the add habit button
      */
     get addHabitButton() {
-        return $('~add-habit-btn');  // testID="add-habit-btn"
+        return $(TodayLocators.addHabitButton);
+    }
+
+    /**
+     * Get the today tab button
+     */
+    get todayTab() {
+        return $(TodayLocators.todayTab);
+    }
+
+    /**
+     * Get the complete habit button (Pokéball button) for a specific habit
+     */
+    getCompleteHabitButton(habitName: string) {
+        return $(TodayLocators.completeHabitButton);
     }
 
     /**
@@ -35,11 +50,13 @@ class TodayPage extends BasePage {
     }
 
     /**
-     * Complete a habit by name
+     * Complete a habit by name - clicks the Pokéball completion button
      */
     async completeHabit(habitName: string) {
-        const habit = await this.getHabitCard(habitName);
-        await this.clickElement(habit);
+        const button = await $(TodayLocators.completeHabitButtonXPath);
+        await this.clickElement(button);
+        // Wait for completion animation and UI update
+        await this.pause(1500);
     }
 
     /**
@@ -50,10 +67,17 @@ class TodayPage extends BasePage {
     }
 
     /**
+     * Navigate to Today tab
+     */
+    async navigateToToday() {
+        await this.clickElement(await this.todayTab);
+    }
+
+    /**
      * Wait for today screen to load
      */
     async waitForLoad() {
-        await this.waitForDisplayed(await this.habitsList, 15000);
+        await this.waitForDisplayed(await this.addHabitButton);
     }
 }
 

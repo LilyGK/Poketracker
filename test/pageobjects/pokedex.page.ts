@@ -1,5 +1,6 @@
 import { $ } from '@wdio/globals';
 import BasePage from './base.page';
+import { PokedexLocators } from '../locators/pokedex.locators';
 
 /**
  * Page object for the Pokedex screen
@@ -9,11 +10,11 @@ class PokedexPage extends BasePage {
      * Define selectors - using testID from PokedexScreen.tsx
      */
     get pokemonList() {
-        return $('~pokedex-list');
+        return $(PokedexLocators.pokemonList);
     }
 
     get pokedexTab() {
-        return $('~tab-pokedex');  // testID="tab-pokedex" from AppNavigator
+        return $(PokedexLocators.pokedexTab);
     }
 
     /**
@@ -50,9 +51,8 @@ class PokedexPage extends BasePage {
      * Wait for Pokedex screen to load
      */
     async waitForLoad() {
-        // Check for the Pokédex title or filter buttons to verify screen loaded
         const titleElement = await this.findByText('Pokédex');
-        await this.waitForDisplayed(titleElement, 15000);
+        await this.waitForDisplayed(titleElement);
     }
 }
 

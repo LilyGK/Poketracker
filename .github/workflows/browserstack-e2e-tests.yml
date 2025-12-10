@@ -1,15 +1,7 @@
 name: BrowserStack E2E Tests
 
 on:
-  workflow_dispatch:  # Manual trigger
-  push:
-    branches:
-      - main
-    paths:
-      - 'src/**'
-      - 'test/**'
-      - 'android/**'
-      - 'wdio.browserstack.conf.ts'
+  workflow_dispatch:  # Manual trigger only (BrowserStack is paid)
 
 jobs:
   browserstack-tests:

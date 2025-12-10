@@ -1,4 +1,4 @@
-import { $ } from '@wdio/globals';
+import { $, browser } from '@wdio/globals';
 
 /**
  * Base page class that all page objects inherit from
@@ -66,5 +66,12 @@ export default class BasePage {
     async scrollToText(text: string): Promise<WebdriverIO.Element> {
         const selector = `android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textContains("${text}"))`;
         return await $(selector);
+    }
+
+    /**
+     * Pause execution for a specified time
+     */
+    async pause(ms: number) {
+        await (browser as any).pause(ms);
     }
 }
