@@ -7,7 +7,7 @@ export default class BasePage {
     /**
      * Wait for element to be displayed
      */
-    async waitForDisplayed(element: WebdriverIO.Element, timeout = 600000) { // 10 minutes to rule out timing
+    async waitForDisplayed(element: WebdriverIO.Element, timeout = 10000) {
         await (element as any).waitForDisplayed({ timeout });
     }
 

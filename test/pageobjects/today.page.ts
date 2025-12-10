@@ -53,7 +53,7 @@ class TodayPage extends BasePage {
      * Wait for today screen to load
      */
     async waitForLoad() {
-        await this.waitForDisplayed(await this.habitsList, 600000); // 10 minutes to rule out timing
+        await this.waitForDisplayed(await this.habitsList, 15000);
     }
 }
 

@@ -90,7 +90,13 @@ jobs:
 
       - name: Generate Allure Report
         if: always()
-        run: npm run allure:generate
+        run: |
+          npm run allure:generate
+          echo "📊 Allure report generated in allure-report/ directory"
+          echo "⚠️  To view the report after downloading:"
+          echo "1. Extract the allure-report.zip artifact"
+          echo "2. Run: python3 -m http.server 8080"
+          echo "3. Open: http://localhost:8080"
 
       - name: Upload Allure Report
         if: always()
@@ -133,3 +139,17 @@ jobs:
           name: app-release-apk
           path: android/app/build/outputs/apk/release/app-release.apk
           retention-days: 7
+
+      - name: Add Report Instructions to Summary
+        if: always()
+        run: |
+          echo "## 📊 Test Report Available" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download the \`allure-report\` artifact and view it locally:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Extract the downloaded zip file, then:" >> $GITHUB_STEP_SUMMARY
+          echo "cd allure-report" >> $GITHUB_STEP_SUMMARY
+          echo "python3 -m http.server 8080" >> $GITHUB_STEP_SUMMARY
+          echo "# Open browser to: http://localhost:8080" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
