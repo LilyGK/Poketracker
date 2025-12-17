@@ -33,31 +33,31 @@ class AddHabitPage extends BasePage {
      * Create a new habit
      */
     async createHabit(name: string, description?: string, goal?: number) {
-        await this.setValue(await this.habitNameInput, name);
+        await this.setValue(this.habitNameInput, name);
         
         if (description) {
-            await this.setValue(await this.habitDescriptionInput, description);
+            await this.setValue(this.habitDescriptionInput, description);
         }
         
         if (goal !== undefined) {
-            await this.setValue(await this.goalInput, goal.toString());
+            await this.setValue(this.goalInput, goal.toString());
         }
         
-        await this.clickElement(await this.saveButton);
+        await this.clickElement(this.saveButton);
     }
 
     /**
      * Cancel habit creation
      */
     async cancel() {
-        await this.clickElement(await this.cancelButton);
+        await this.clickElement(this.cancelButton);
     }
 
     /**
      * Wait for add habit screen to load
      */
     async waitForLoad() {
-        await this.waitForDisplayed(await this.habitNameInput);
+        await this.waitForDisplayed(this.habitNameInput);
     }
 }
 

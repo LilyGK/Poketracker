@@ -63,21 +63,21 @@ class TodayPage extends BasePage {
      * Navigate to add habit screen
      */
     async goToAddHabit() {
-        await this.clickElement(await this.addHabitButton);
+        await this.clickElement(this.addHabitButton);
     }
 
     /**
      * Navigate to Today tab
      */
     async navigateToToday() {
-        await this.clickElement(await this.todayTab);
+        await this.clickElement(this.todayTab);
     }
 
     /**
      * Wait for today screen to load
      */
     async waitForLoad() {
-        await this.waitForDisplayed(await this.addHabitButton);
+        await this.waitForDisplayed(this.addHabitButton);
     }
 }
 

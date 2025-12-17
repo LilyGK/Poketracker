@@ -44,7 +44,7 @@ class PokedexPage extends BasePage {
      * Navigate to Pokedex tab
      */
     async navigateToPokedex() {
-        await this.clickElement(await this.pokedexTab);
+        await this.clickElement(this.pokedexTab);
     }
 
     /**

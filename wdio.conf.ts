@@ -226,18 +226,9 @@ export const config: any = {
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     beforeTest: async function (test: any, context: any) {
-        // Start recording video for each test
-        try {
-            await (browser as any).execute('mobile: startRecordingScreen', [{
-                videoQuality: 'medium',
-                videoFps: 10,
-                videoType: 'mp4',
-                timeLimit: 900  // 15 minutes max
-            }]);
-            console.log(`Started recording video for test: ${test.title}`);
-        } catch (error) {
-            console.error('Failed to start video recording:', error);
-        }
+        // Video recording disabled for local emulator testing
+        // Enable for cloud device testing if needed
+        console.log(`Starting test: ${test.title}`);
     },
     /**
      * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
@@ -310,24 +301,7 @@ export const config: any = {
         const timestamp = new Date().toISOString().replace(/:/g, '-');
         const testName = test.title.replace(/\s+/g, '-').toLowerCase();
         
-        // Stop and retrieve video recording (always, not just on failure)
-        try {
-            const videoBase64 = await (browser as any).execute('mobile: stopRecordingScreen');
-            if (videoBase64) {
-                const fs = require('fs');
-                const path = require('path');
-                const videoDir = './videos';
-                if (!fs.existsSync(videoDir)) {
-                    fs.mkdirSync(videoDir, { recursive: true });
-                }
-                const statusPrefix = passed ? 'passed' : 'failed';
-                const videoPath = path.join(videoDir, `${statusPrefix}-${testName}-${timestamp}.mp4`);
-                fs.writeFileSync(videoPath, videoBase64, 'base64');
-                console.log(`Video saved: ${videoPath}`);
-            }
-        } catch (videoError) {
-            console.error('Failed to retrieve video:', videoError);
-        }
+        // Video recording disabled for local emulator testing
         
         // Save screenshot on failure
         if (!passed) {

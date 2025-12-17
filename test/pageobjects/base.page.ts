@@ -7,40 +7,40 @@ export default class BasePage {
     /**
      * Wait for element to be displayed
      */
-    async waitForDisplayed(element: WebdriverIO.Element, timeout = 10000) {
-        await (element as any).waitForDisplayed({ timeout });
+    async waitForDisplayed(element: ReturnType<typeof $>, timeout = 10000) {
+        await element.waitForDisplayed({ timeout });
     }
 
     /**
      * Wait for element and click
      */
-    async clickElement(element: WebdriverIO.Element) {
+    async clickElement(element: ReturnType<typeof $>) {
         await this.waitForDisplayed(element);
-        await (element as any).click();
+        await element.click();
     }
 
     /**
      * Wait for element and set value
      */
-    async setValue(element: WebdriverIO.Element, value: string) {
+    async setValue(element: ReturnType<typeof $>, value: string) {
         await this.waitForDisplayed(element);
-        await (element as any).setValue(value);
+        await element.setValue(value);
     }
 
     /**
      * Get text from element
      */
-    async getText(element: WebdriverIO.Element): Promise<string> {
+    async getText(element: ReturnType<typeof $>): Promise<string> {
         await this.waitForDisplayed(element);
-        return await (element as any).getText();
+        return await element.getText();
     }
 
     /**
      * Check if element is displayed
      */
-    async isDisplayed(element: WebdriverIO.Element): Promise<boolean> {
+    async isDisplayed(element: ReturnType<typeof $>): Promise<boolean> {
         try {
-            return await (element as any).isDisplayed();
+            return await element.isDisplayed();
         } catch (error) {
             return false;
         }
@@ -49,23 +49,23 @@ export default class BasePage {
     /**
      * Find element by text
      */
-    async findByText(text: string): Promise<WebdriverIO.Element> {
-        return await $(`android=new UiSelector().textContains("${text}")`);
+    async findByText(text: string): Promise<ReturnType<typeof $>> {
+        return $(`android=new UiSelector().textContains("${text}")`);
     }
 
     /**
      * Find element by content description
      */
-    async findByContentDesc(desc: string): Promise<WebdriverIO.Element> {
-        return await $(`~${desc}`);
+    async findByContentDesc(desc: string): Promise<ReturnType<typeof $>> {
+        return $(`~${desc}`);
     }
 
     /**
      * Scroll to text (Android)
      */
-    async scrollToText(text: string): Promise<WebdriverIO.Element> {
+    async scrollToText(text: string): Promise<ReturnType<typeof $>> {
         const selector = `android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().textContains("${text}"))`;
-        return await $(selector);
+        return $(selector);
     }
 
     /**

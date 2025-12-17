@@ -11,8 +11,8 @@ import { browser } from '@wdio/globals';
 export async function waitForElement(
     selector: string,
     timeout = 10000
-): Promise<WebdriverIO.Element> {
-    const element = await $(selector);
+): Promise<ReturnType<typeof $>> {
+    const element = $(selector);
     await element.waitForDisplayed({ timeout });
     return element;
 }
